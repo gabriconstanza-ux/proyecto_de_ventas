@@ -2,30 +2,35 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Sistema de Ventas</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <title>Calculadora de Ventas</title>
+    <link rel="stylesheet" href="/static/styles.css">
 </head>
-<body class="container mt-5">
-    <h2 class="mb-4">Calculadora de Ventas (USD a CLP)</h2>
-    <form method="POST" class="card p-4 shadow-sm">
-        <div class="mb-3">
-            <label class="form-label">Monto de la venta (USD):</label>
-            <input type="number" step="0.01" name="monto_usd" class="form-control" required>
-        </div>
-        <button type="submit" class="btn btn-primary">Calcular Totales</button>
+<body>
+
+<div class="container">
+    <h1>💰 Calculadora de Ventas</h1>
+
+    <form method="POST">
+        <input type="number" step="0.01" name="monto" placeholder="Monto en USD" required>
+        <button type="submit">Calcular</button>
     </form>
 
-    {% if res %}
-    <div class="mt-4 alert alert-info">
-        <h4>Resultados:</h4>
-        <p><strong>Valor Dólar:</strong> ${{ res.valor_dolar }}</p>
-        <p><strong>Venta Original:</strong> ${{ res.venta_usd }} USD</p>
-        <p><strong>Descuento Aplicado:</strong> ${{ res.descuento_usd }} USD</p>
-        <hr>
-        <p><strong>Neto:</strong> ${{ "{:,.0f}".format(res.neto_clp) }} CLP</p>
-        <p><strong>IVA (19%):</strong> ${{ "{:,.0f}".format(res.iva) }} CLP</p>
-        <p class="h4 text-success"><strong>TOTAL: ${{ "{:,.0f}".format(res.total) }} CLP</strong></p>
+    {% if error %}
+        <p class="error">{{ error }}</p>
+    {% endif %}
+
+    {% if resultado %}
+    <div class="resultado">
+        <p><strong>Dólar:</strong> ${{ resultado.dolar }}</p>
+        <p><strong>Monto USD:</strong> ${{ resultado.usd }}</p>
+        <p><strong>Descuento:</strong> ${{ resultado.descuento }}</p>
+        <p><strong>Neto CLP:</strong> ${{ resultado.neto_clp }}</p>
+        <p><strong>IVA:</strong> ${{ resultado.iva }}</p>
+        <p class="total"><strong>Total CLP:</strong> ${{ resultado.total }}</p>
     </div>
     {% endif %}
+</div>
+
 </body>
 </html>
+
