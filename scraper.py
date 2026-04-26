@@ -1,32 +1,34 @@
 from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
-from selenium.webdriver.chrome.service import Service
-from webdriver_manager.chrome import ChromeDriverManager
-
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-def obtener_dolar_dia():
-    options = Options()
-    options.add_argument("--headless")
+URL = "https://www.bcentral.cl/inicio"
 
-    service = Service(ChromeDriverManager().install())
-    driver = webdriver.Chrome(service=service, options=options)
+
+def obtener_dolar():
+    driver = webdriver.Chrome()
 
     try:
-        driver.get("https://www.bcentral.cl/inicio")
+        driver.get(URL)
+        wait = WebDriverWait(driver, 30)
 
-        wait = WebDriverWait(driver, 10)
+        wait.until(EC.presence_of_element_located((By.TAG_NAME, "body")))
 
-        elemento = wait.until(
-            EC.presence_of_element_located(
-                (By.XPATH, "//td[contains(text(),'Dólar')]//following-sibling::td//span")
-            )
+        elemento = driver.find_element(
+            By.CSS_SELECTOR,
+            "#_BcentralIndicadoresViewer_INSTANCE_pLcePZ0Eybi8_myTooltipDelegate > div > div > div.fin-indicators-col1 > div > div > div:nth-child(6) > div > p.basic-text.fs-2.f-opensans-bold.text-center.c-blue-nb-2"
         )
 
-        valor_texto = elemento.text.replace('.', '').replace(',', '.')
-        return float(valor_texto)
+        valor = elemento.text
+
+        print("VALOR SCRAPED:", valor)
+
+        valor = valor.replace("$", "").strip()
+        valor = valor.replace(".", "")
+        valor = valor.replace(",", ".")
+
+        return float(valor)
 
     finally:
         driver.quit()
